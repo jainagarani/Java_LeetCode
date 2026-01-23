@@ -96,7 +96,7 @@ public class AdvancedTransformations {
         //find the youngest employee in each department
 
         Map<String, Optional<Employee>> empMap3 =employees.stream().collect(Collectors.groupingBy(Employee::getDepartment, Collectors.minBy(Comparator.comparingInt(Employee::getAge))));
-        empMap3.entrySet().forEach(System.out::println);
+        //empMap3.entrySet().forEach(System.out::println);
 
         //Find the department with highest average salary
         String department = employees.stream().collect(Collectors.groupingBy(Employee::getDepartment, Collectors.averagingDouble(Employee::getSalary)))
@@ -110,26 +110,20 @@ public class AdvancedTransformations {
         List<Employee> employeeList7 = employees.stream().sorted(Comparator.comparingInt(Employee::getAge)
                 .thenComparing(Comparator.comparingDouble(Employee::getSalary))
                 .thenComparing(Comparator.comparing(Employee::getName))).toList();
-        employeeList7.stream().forEach(System.out::println);
+       // employeeList7.stream().forEach(System.out::println);
 
-        //che
+        //check if a given employee name exists
 
+        boolean match = employees.stream().anyMatch(e-> e.getName().equalsIgnoreCase("Ian"));
+        System.out.println("match "+match);
 
+        //collect employees in a treeSet sorted by Salary
 
+        Set<Employee> employeeList8 = employees.stream().sorted(Comparator.comparingDouble(Employee::getSalary)).collect(Collectors.toSet());
+        //employeeList8.forEach(System.out::println);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+        TreeSet<Employee> employeeList9 = employees.stream().collect(Collectors.toCollection(()-> new TreeSet<>(Comparator.comparingDouble(Employee::getSalary))));
+        employeeList9.forEach(System.out::println);
 
     }
 }
