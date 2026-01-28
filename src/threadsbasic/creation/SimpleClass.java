@@ -8,5 +8,7 @@ public class SimpleClass {
             t.start();
             t.join();
         }
+
+        System.out.println("Main thread is exiting");
     }
 }
