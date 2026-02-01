@@ -1,5 +1,7 @@
 package threadsbasic;
 
+import java.util.concurrent.locks.Lock;
+
 public class DeadLockExample {
     public static void main(String[] args) throws InterruptedException {
         Object resource1 = new Object();
@@ -15,7 +17,6 @@ public class DeadLockExample {
                 }
                 synchronized (resource2){
                     System.out.println("Thread1 locking resource2");
-
 
                 }
 
