@@ -1,8 +1,7 @@
 package Streams;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class CombinationTricky {
@@ -22,11 +21,52 @@ public class CombinationTricky {
                 new Employee(110, "Jane", "Finance", 60000, 28, "Female", Arrays.asList("2233445566")) // duplicate salary+age with Charlie
         );
 
-
-        /*employees.stream().collect(Collectors.groupingBy(Employee::getName, Collectors.counting()))
-                .entrySet().stream().filter(Map.Entry::getValue >1)
+        //find duplicate employee names
+        Set<String> duplicateNames = employees.stream().collect(Collectors.groupingBy(Employee::getName, Collectors.counting()))
+                .entrySet().stream().filter(e-> e.getValue()>1)
                 .map(Map.Entry::getKey)
-                .collect(Collectors.toSet());*/
+                .collect(Collectors.toSet());
+
+        //duplicateNames.stream().forEach(System.out::println);
+
+       Map<Integer, String>  empMap = employees.stream().collect(Collectors.groupingBy(Employee::getId, Collectors.mapping(Employee::getName, Collectors.toSet())))
+                .entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, e-> e.getValue().stream().findFirst().get()));
+       //empMap.entrySet().forEach(System.out::println);
+
+       //find employees whose phonelist contains specific number
+
+       List<Employee> employees1 =  employees.stream().flatMap(
+               e -> e.getPhoneNumbers().stream()
+                       .filter(num-> num.contains("77"))
+                       .map( emp -> e ))
+               .toList();
+
+      // employees1.stream().forEach(System.out::println);
+
+        
+// Find 3rd highest salary in IT department
+       Employee emp = employees.stream().filter(e-> e.getDepartment().equalsIgnoreCase("IT"))
+               .sorted(Comparator.comparingDouble(Employee::getSalary).reversed()).skip(2).findFirst().get();
+
+      Map<String, Optional<Employee>> empMap1 =  employees.stream().collect(Collectors.groupingBy(Employee::getDepartment,
+               Collectors.collectingAndThen(Collectors.toList(),
+                       list -> list.stream().sorted(Comparator.comparingDouble(Employee::getSalary).reversed()).skip(2).findFirst())));
+        empMap1.entrySet().forEach(System.out::println);
+
+        Map<String, Employee> empMap2 = employees.stream().collect(Collectors.groupingBy(Employee::getDepartment,
+                Collectors.collectingAndThen(
+                        Collectors.maxBy(Comparator.comparingDouble(Employee::getSalary)), empl -> empl.get())));
+
+        //find employess with longest name
+        employees.stream().map(Employee::getName).max(Comparator.comparingInt(String::length));
+
+        employees.stream().sorted((e1,e2) -> e2.getName().length() -e1.getName().length()).toList();
+
+
+
+
+
 
     }
 }
